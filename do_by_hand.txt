@@ -1,0 +1,18 @@
+Применить миграции для проверки работоспособности постгреса:
+docker-compose exec web poetry run python manage.py migrate --noinput
+Зайти в пг, посмотреть таблицы
+docker-compose exec db psql --username=django --dbname=django_dev
+\l
+\c django_dev
+\dt
+
+
+#########################################
+############## Для ПРОД #################
+#########################################
+docker-compose exec db psql --username=django --dbname=django_prod
+
+
+docker-compose -f docker-compose.prod.yml up -d --build
+docker-compose -f docker-compose.prod.yml exec web poetry run python manage.py migrate --noinput
+docker-compose -f docker-compose.prod.yml exec web poetry run python manage.py collectstatic --no-input --clear
